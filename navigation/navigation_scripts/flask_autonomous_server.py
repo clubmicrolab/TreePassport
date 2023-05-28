@@ -11,6 +11,8 @@ from pymavlink import mavutil
 import time
 import argparse
 
+connection_string = "/dev/ttyACM0"
+
 # Initialize the necessary variables
 serial_arg = "/dev/serial0"
 

@@ -3,7 +3,7 @@ import time
 
 def Establish_Connection_to_Drone() :
 
-    ConnectionString = "/dev/ttyS0"
+    ConnectionString = "/dev/ttyACM0"
     #USB on Rasperry Pi = "/dev/ttyACM0"
     #Serial on Pi to Telemetry 2 on Pixhawk = "/dev/ttyS0"
 
