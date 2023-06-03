@@ -3,7 +3,7 @@
 ### OS: Windows 
 ### Python 3.8 
 
-## A pretrained model,deepforest, have been used for image processing and flask for runing the server. 
+## A pretrained model,deepforest, have been used for image processing and flask for running the server. 
 
 ### Installation guide:
 ``` 
