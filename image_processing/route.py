@@ -18,7 +18,7 @@ def image():
     imageBGR  = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  
     imageRGB = cv2.cvtColor(imageBGR, cv2.COLOR_BGR2RGB)
 
-    thread = threading.Thread(target=predict_factory_method,args=(imageRGB,int(altitude)))
+    thread = threading.Thread(target=predict_factory_method,args=(imageRGB, int(altitude)))
     thread.start()
 
     response = {'message': 'succesfully recieved'}
