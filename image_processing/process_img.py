@@ -2,9 +2,13 @@ from model_singleton import ModelSingleton
 from crown_math import calculate_crown_size 
 import cv2 
 from deepforest import preprocess
-import os
+import os 
+import threading 
+from vegetation_index_ndvi import  calculate_vegetation_index_and_save_img
 
-def predict_factory_method(image,altitude):
+def predict_factory_method(image, altitude): 
+    thread = threading.Thread(target=calculate_vegetation_index_and_save_img,args=(image,))
+    thread.start()
     if altitude > 100:
         predict_crowns_segemented(image,altitude)
     else:
