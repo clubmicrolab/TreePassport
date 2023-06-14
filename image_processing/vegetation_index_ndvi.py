@@ -16,7 +16,8 @@ def calculate_vegetation_index_and_save_img(image):
     current_location = os.getcwd() 
     directory = f'{current_location}/vegetation_map_ndvi' 
     IMG_COUNTER = len(os.listdir(directory))
-    cv2.imwrite(f'{directory}/kek{IMG_COUNTER+1}.png', color_mapped_image)
+    cv2.imwrite(f'{directory}/kek{IMG_COUNTER+1}.png', color_mapped_image) 
+    return color_mapped_image
 
 
 
