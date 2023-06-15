@@ -4,6 +4,8 @@
 lightning_logs/
 
 
+*.env
+
 
 
 # Byte-compiled / optimized / DLL files
