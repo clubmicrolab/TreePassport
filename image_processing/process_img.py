@@ -10,8 +10,9 @@ from multiprocessing.pool import ThreadPool
 from sklearn.preprocessing import MinMaxScaler 
 import numpy as np
 
+from send_to_db import send_to_cloud 
 
-def predict_factory_method(image, altitude):
+def predict_factory_method(image, altitude,_lat, _long):
     pool = ThreadPool(processes=1) 
     async_pool_result = pool.apply_async(calculate_vegetation_index_and_save_img, (image,))
 
@@ -19,25 +20,25 @@ def predict_factory_method(image, altitude):
         # simple segmentation without the ndvi
         predict_crowns_segemented(image,altitude)
     else:
-        predict_crowns(image,altitude,async_pool_result)
+        predict_crowns(image,altitude,async_pool_result,_lat, _long)
 
 
-def predict_crowns(image,altitude,async_pool_result): 
+def predict_crowns(image,altitude,async_pool_result,_lat, _long): 
     pred_boxes = ModelSingleton.getInstance().predict_image(image=image[:,:,:3])   
     pred_boxes = pred_boxes[pred_boxes.score > 0.3] 
     ndvi_img = async_pool_result.get() 
-    process_save_img(pred_boxes, image, ndvi_img, altitude) 
+    process_save_img(pred_boxes, image, ndvi_img, altitude,_lat, _long) 
 
 
-def predict_crowns_segemented(image,altitude):
+def predict_crowns_segemented(image,altitude,_lat, _long):
     #Create windows of 400px
     windows = preprocess.compute_windows(image, patch_size=400,patch_overlap=0)
     print(f'We have {len(windows)} windows in the image') 
     tile = ModelSingleton.getInstance().predict_tile(image=image,return_plot=False,patch_overlap=0,iou_threshold=0.05,patch_size=400) 
-    process_save_img(tile, image,altitude)
+    process_save_img(tile, image,image, altitude,_lat, _long)
 
 
-def process_save_img(pred_boxes,image, ndvi_img, altitude):  
+def process_save_img(pred_boxes,image, ndvi_img, altitude,_lat,_long):  
     img = image.copy()  
     fn_img = image.copy()
 
@@ -87,6 +88,11 @@ def process_save_img(pred_boxes,image, ndvi_img, altitude):
                     color, thickness, cv2.LINE_AA, False)  
             cv2.putText(fn_img, vegetation_index,  (x_center, y_center+50) , font, 0.5, 
                  (0, 0, 255) , thickness, cv2.LINE_AA, False)  
+
+            send_to_cloud({"LONG" : _long, 
+                          "LAT" : _lat, 
+                          "Vegetation_Index" : vegetation_index, 
+                           "Crown_Area" : crown_size })
 
 
 

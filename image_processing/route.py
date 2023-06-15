@@ -13,12 +13,14 @@ app = Flask(__name__)
 @app.route('/api/image', methods=['POST'])
 def image():
     r = request 
-    altitude = r.args.get('altitude') 
+    altitude = r.args.get('altitude')  
+    _lat = r.args.get('lat')  
+    _long =  r.args.get('long') 
     nparr = np.fromstring(r.data, np.uint8)
     imageBGR  = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  
     imageRGB = cv2.cvtColor(imageBGR, cv2.COLOR_BGR2RGB)
 
-    thread = threading.Thread(target=predict_factory_method,args=(imageRGB, int(altitude)))
+    thread = threading.Thread(target=predict_factory_method,args=(imageRGB, int(altitude),_lat,_long))
     thread.start()
 
     response = {'message': 'succesfully recieved'}
